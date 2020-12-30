@@ -1,82 +1,68 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
-import React, { useLayoutEffect, useState } from 'react'
-import { View, Text, Button } from 'react-native'
+import React, { useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
+import { RootStackParamList } from './types'
 
-declare const global: { HermesInternal: null | {} }
+import HomeScreen from './src/pages/practice/HomeScreen'
+import DetailScreen from './src/pages/practice/DetailScreen'
+import CustomHeaderScreen, { CustomHeader } from './src/pages/practice/CustomHeaderScreen'
+import { Button } from 'react-native'
+import { NestedScreen } from './src/pages/practice/NestedScreen'
+import ModalScreen from './src/pages/practice/ModalScreen'
 
-function HomeScreen(props: { [key: string]: any } & { extraData: any }) {
-  const { navigation } = props
+const Stack = createStackNavigator<RootStackParamList>()
+
+export default function App() {
   const [count, setCount] = useState(0)
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight() {
-        return <Button title='header right' onPress={() => setCount(count => count + 1)} />
-      }
-    })
-  }, [navigation])
 
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Home Screen, count: {count}</Text>
-      <Button
-        title='to details'
-        onPress={() => props.navigation.navigate('Detail', { data: { value: 123 } })}
-      />
-    </View>
-  )
-}
-
-function DetailsScreen({ route, navigation }: any) {
-  const { data } = route.params
-
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Details Screen</Text>
-      <Text>{JSON.stringify(data)}</Text>
-    </View>
-  )
-}
-
-const CustomHeader = (props: any) => (
-  <View>
-    <Text>custom header, {props.title}</Text>
-  </View>
-)
-
-const Stack = createStackNavigator()
-
-function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='Home'>
+      <Stack.Navigator
+        initialRouteName='Home'
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: 'black'
+          },
+          headerTitleStyle: {
+            color: '#fff'
+          }
+        }}
+      >
         <Stack.Screen
           name='Home'
+          component={HomeScreen}
           options={{
-            headerTitle: 'header text',
             headerRight: () => (
-              <View>
-                <Text>right button</Text>
-              </View>
+              <Button
+                title={`header right button; count:  ${count}`}
+                onPress={() => setCount(c => c + 1)}
+              />
             )
           }}
-        >
-          {props => <HomeScreen {...props} extraData={123} />}
-        </Stack.Screen>
-        <Stack.Screen name='Detail' component={DetailsScreen} />
+        />
+        <Stack.Screen
+          name='Detail'
+          component={DetailScreen}
+          options={({ route, navigation }) => ({
+            title: `${route.params?.data.username}'s page`,
+            headerStyle: {
+              backgroundColor: '#f4511e'
+            },
+            headerTintColor: '#ffffff',
+            headerTitleStyle: {
+              fontWeight: 'bold'
+            },
+            headerLeft: () => <Button title='back' onPress={() => navigation.goBack()} />
+          })}
+        />
+        <Stack.Screen
+          name='CustomHeader'
+          component={CustomHeaderScreen}
+          options={{ headerTitle: props => <CustomHeader {...props} /> }}
+        />
+        <Stack.Screen name='Nested' component={NestedScreen} />
+        <Stack.Screen name='Modal' component={ModalScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   )
 }
-
-export default App
