@@ -8,32 +8,51 @@
  * @format
  */
 
-import React from 'react'
-import { SafeAreaView, StyleSheet, ScrollView, StatusBar, View, Text } from 'react-native'
+import React, { useLayoutEffect, useState } from 'react'
+import { View, Text, Button } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 
-import { Colors } from 'react-native/Libraries/NewAppScreen'
-import { Login } from './src/pages/Auth'
-import { TodoContainer } from './src/pages/Todo'
-
 declare const global: { HermesInternal: null | {} }
 
-function HomeScreen(props: { extraData: number }) {
+function HomeScreen(props: { [key: string]: any } & { extraData: any }) {
+  const { navigation } = props
+  const [count, setCount] = useState(0)
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight() {
+        return <Button title='header right' onPress={() => setCount(count => count + 1)} />
+      }
+    })
+  }, [navigation])
+
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Home Screen</Text>
+      <Text>Home Screen, count: {count}</Text>
+      <Button
+        title='to details'
+        onPress={() => props.navigation.navigate('Detail', { data: { value: 123 } })}
+      />
     </View>
   )
 }
 
-function DetailsScreen() {
+function DetailsScreen({ route, navigation }: any) {
+  const { data } = route.params
+
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>Details Screen</Text>
+      <Text>{JSON.stringify(data)}</Text>
     </View>
   )
 }
+
+const CustomHeader = (props: any) => (
+  <View>
+    <Text>custom header, {props.title}</Text>
+  </View>
+)
 
 const Stack = createStackNavigator()
 
@@ -41,7 +60,17 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName='Home'>
-        <Stack.Screen name='Home'>
+        <Stack.Screen
+          name='Home'
+          options={{
+            headerTitle: 'header text',
+            headerRight: () => (
+              <View>
+                <Text>right button</Text>
+              </View>
+            )
+          }}
+        >
           {props => <HomeScreen {...props} extraData={123} />}
         </Stack.Screen>
         <Stack.Screen name='Detail' component={DetailsScreen} />
@@ -49,12 +78,5 @@ function App() {
     </NavigationContainer>
   )
 }
-
-const styles = StyleSheet.create({
-  scrollView: {
-    height: '100%',
-    backgroundColor: Colors.lighter
-  }
-})
 
 export default App
