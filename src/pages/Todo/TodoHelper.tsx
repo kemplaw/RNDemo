@@ -1,10 +1,19 @@
 import React from 'react'
-import { Text, View } from 'react-native'
+import { Button, StyleSheet, Text, View } from 'react-native'
+import { TodoHelperPropsDefine } from './types'
 
-export default function TodoHelper() {
+export default function TodoHelper({ todoListLength, onClear }: TodoHelperPropsDefine) {
   return (
-    <View>
-      <Text>todo helper</Text>
+    <View style={styles.wrapper}>
+      <Text>{todoListLength} items left </Text>
+      <Button title='clear' onPress={onClear} />
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  wrapper: {
+    display: 'flex',
+    alignItems: 'center'
+  }
+})
