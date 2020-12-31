@@ -1,20 +1,27 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { View } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler'
 import { TodoInputPropsDefine } from './types'
 
 export default function TodoInput({ onEnter }: TodoInputPropsDefine) {
-  const handleSubmit = useCallback(
-    (e: any) => [
-      // TODO: trouble param => e
-      onEnter(e.target.value)
-    ],
-    [onEnter]
-  )
+  const [value, setValue] = useState('')
+  const handleSubmit = useCallback(() => {
+    if (!value) {
+      return
+    }
+
+    onEnter(value)
+    setValue('')
+  }, [onEnter, value])
 
   return (
     <View>
-      <TextInput placeholder='enter to add todo' onSubmitEditing={handleSubmit} />
+      <TextInput
+        value={value}
+        placeholder='enter to add todo'
+        onChangeText={setValue}
+        onSubmitEditing={handleSubmit}
+      />
     </View>
   )
 }

@@ -1,28 +1,42 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
+import { Provider } from 'react-redux'
 import { TodoContainer } from './src/pages/Todo'
 import { LoginScreen } from './src/pages/Auth'
-import useAuthHook, { AuthControlContext, authControl } from './src/hooks/useAuthHook'
+import store from './src/store'
 
 const RootAppStack = createStackNavigator()
 
 export default function App() {
-  const { state, dispatch } = useAuthHook()
+  const [hasToken, setHasToken] = useState(false)
+  const [isSignOut, setIsSignOut] = useState(true)
+
+  useEffect(() => {
+    const unsubscribe = store.subscribe(() => {
+      const { userToken, isSignOut } = store.getState().user
+      const token = Boolean(userToken)
+      setHasToken(token)
+      setIsSignOut(isSignOut)
+    })
+    return unsubscribe
+  }, [])
 
   return (
     <NavigationContainer>
-      <AuthControlContext.Provider value={authControl}>
-        <RootAppStack.Navigator>
-          {state.userToken ? (
+      <Provider store={store}>
+        <RootAppStack.Navigator screenOptions={{ headerShown: false }}>
+          {hasToken ? (
             <RootAppStack.Screen name='Todo' component={TodoContainer} />
           ) : (
-            <RootAppStack.Screen name='Auth' options={{ headerShown: false }}>
-              {props => <LoginScreen {...props} dispatch={dispatch} />}
-            </RootAppStack.Screen>
+            <RootAppStack.Screen
+              name='Auth'
+              options={{ animationTypeForReplace: isSignOut ? 'pop' : 'push' }}
+              component={LoginScreen}
+            />
           )}
         </RootAppStack.Navigator>
-      </AuthControlContext.Provider>
+      </Provider>
     </NavigationContainer>
   )
 }
