@@ -25,6 +25,9 @@ export default function HomeScreen({ navigation }: HomeScreePropsDefine) {
   const handleNavigateToDetail = useCallback(() => handleNavigateTo('Detail'), [handleNavigateTo])
   const handleNavigateToNested = useCallback(() => handleNavigateTo('Nested'), [handleNavigateTo])
   const handleNavigateToModal = useCallback(() => handleNavigateTo('Modal'), [handleNavigateTo])
+  const handleNavigateToBottomTab = useCallback(() => handleNavigateTo('BottomTab'), [
+    handleNavigateTo
+  ])
 
   return (
     <View style={styles.wrapper}>
@@ -33,6 +36,9 @@ export default function HomeScreen({ navigation }: HomeScreePropsDefine) {
       <Button title='to custom header screen' onPress={handleNavigateToCustomHeader} />
       <Button title='to nested screen' onPress={handleNavigateToNested} />
       <Button title='to modal screen' onPress={handleNavigateToModal} />
+      <Button title='to bottomTab screen' onPress={handleNavigateToBottomTab} />
+      <Button title='to drawer screen' onPress={() => navigation.navigate('Drawer')} />
+      <Button title='to auth screen' onPress={() => navigation.navigate('Auth')} />
     </View>
   )
 }

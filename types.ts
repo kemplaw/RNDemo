@@ -1,7 +1,7 @@
 import { RouteProp } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 
-export type RouterNameMap = 'Home' | 'Detail' | 'CustomHeader' | 'Nested' | 'Modal'
+export type RouterNameMap = 'Home' | 'Detail' | 'CustomHeader' | 'Nested' | 'Modal' | 'BottomTab'
 
 type ParamsDataDefine = { data: any } | undefined
 

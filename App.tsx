@@ -9,6 +9,9 @@ import CustomHeaderScreen, { CustomHeader } from './src/pages/practice/CustomHea
 import { Button } from 'react-native'
 import { NestedScreen } from './src/pages/practice/NestedScreen'
 import ModalScreen from './src/pages/practice/ModalScreen'
+import BottomTabScreen from './src/pages/practice/BottomTabScreen'
+import DrawerScreen from './src/pages/practice/DrawerScreen'
+import AuthFlowScreen from './src/pages/practice/AuthFlowScreen'
 
 const Stack = createStackNavigator<RootStackParamList>()
 
@@ -62,6 +65,9 @@ export default function App() {
         />
         <Stack.Screen name='Nested' component={NestedScreen} />
         <Stack.Screen name='Modal' component={ModalScreen} />
+        <Stack.Screen name='BottomTab' component={BottomTabScreen} />
+        <Stack.Screen name='Drawer' component={DrawerScreen} />
+        <Stack.Screen name='Auth' component={AuthFlowScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   )
